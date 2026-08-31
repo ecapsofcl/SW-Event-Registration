@@ -201,15 +201,81 @@
   }
   .status{
     display:none;
-    margin-top:16px;
-    padding:12px 14px;
-    border-radius:8px;
+    margin-top:0;
+    padding:24px 32px 30px;
+    border-radius:0 0 14px 14px;
     font-size:13.5px;
     line-height:1.5;
   }
   .status.show{display:block;}
   .status.ok{background:#EAF7EF;color:var(--ok);border:1px solid #BFE7CE;}
   .status.err{background:#FDECEC;color:#B3261E;border:1px solid #F5C2C0;}
+
+  .success-card{
+    text-align:center;
+    padding:8px 4px 4px;
+  }
+  .success-icon{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:#EAF7EF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 16px;
+  }
+  .success-icon svg{
+    width:26px;
+    height:26px;
+  }
+  .success-title{
+    font-size:19px;
+    font-weight:700;
+    color:var(--navy-deep);
+    margin:0 0 6px;
+  }
+  .success-sub{
+    font-size:14px;
+    color:var(--muted);
+    margin:0 0 22px;
+    line-height:1.5;
+  }
+  .success-sub b{color:var(--ink);}
+  .success-details{
+    text-align:left;
+    background:#F6F8FA;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:18px;
+  }
+  .success-details .ev-name{
+    font-size:15px;
+    font-weight:700;
+    color:var(--navy-deep);
+    margin:0 0 10px;
+  }
+  .success-row{
+    display:flex;
+    gap:10px;
+    font-size:13.5px;
+    color:var(--ink);
+    padding:6px 0;
+  }
+  .success-row:not(:last-child){
+    border-bottom:1px solid var(--line);
+  }
+  .success-row .ic{
+    color:var(--orange);
+    flex:none;
+    width:16px;
+  }
+  .success-footer{
+    font-size:12.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
   .accent-bar{
     height:4px;
     background:linear-gradient(90deg, var(--navy) 0%, var(--navy) 55%, var(--orange) 100%);
@@ -297,10 +363,10 @@
 
       <button type="submit" class="submit-btn" id="submitBtn">Register Now</button>
 
-      <div class="status" id="statusBox"></div>
-
       <p class="note">By registering, your details are recorded for event coordination by eCAPS. Fields marked <span class="req">*</span> are required.</p>
     </form>
+
+    <div class="status" id="statusBox"></div>
   </div>
   <p class="footer-note">eCAPS Networking &amp; Cybersecurity · Platinum Partner, SonicWall</p>
 </div>
@@ -355,7 +421,26 @@
       // no-cors gives an opaque response, so we optimistically assume success
       form.style.display = 'none';
       statusBox.className = 'status show ok';
-      statusBox.innerHTML = "<b>You're registered!</b><br>Thank you, " + (formData.get('fullName') || '') + ". A confirmation has been recorded. We look forward to seeing you on 8th September 2026 at The Residency Tower, Trivandrum.";
+
+      const name = (formData.get('fullName') || '').toString().trim();
+
+      statusBox.innerHTML = `
+        <div class="success-card">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12.5L9.5 18L20 6" stroke="#1E8E5A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="success-title">Registration Confirmed</p>
+          <p class="success-sub">Thank you${name ? ", <b>" + name + "</b>" : ""}. Your spot has been recorded and we look forward to seeing you.</p>
+          <div class="success-details">
+            <p class="ev-name">Channel Partner Meet 2026</p>
+            <div class="success-row"><span class="ic">&#128197;</span><span>8th September 2026</span></div>
+            <div class="success-row"><span class="ic">&#128205;</span><span>The Residency Tower, Trivandrum &mdash; Hall Planet, 3rd Floor</span></div>
+          </div>
+          <p class="success-footer">A confirmation has also been sent to our team. If your plans change, please let us know in advance.</p>
+        </div>
+      `;
     } catch (err) {
       statusBox.className = 'status show err';
       statusBox.textContent = 'Something went wrong submitting the form. Please try again or contact us directly.';
